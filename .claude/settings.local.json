@@ -18,7 +18,10 @@
       "Bash(git remote *)",
       "Bash(git branch *)",
       "Bash(git push *)",
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\habits\\\\[id]\")",
+      "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\habits\\\\[id]\\\\log\")",
+      "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\personal\\\\[id]\")"
     ]
   }
 }
