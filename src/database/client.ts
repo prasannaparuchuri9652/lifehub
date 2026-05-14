@@ -6,6 +6,9 @@ import * as work_task_tables from "./schema/work-tasks";
 import * as personal_task_tables from "./schema/personal-tasks";
 import * as habit_tables from "./schema/habits";
 import * as habit_log_tables from "./schema/habit-logs";
+import * as payment_method_tables from "./schema/payment-methods";
+import * as expense_tables from "./schema/expenses";
+import * as budget_tables from "./schema/budgets";
 
 const { Pool } = pg;
 
@@ -24,6 +27,9 @@ export const schema = {
   ...personal_task_tables,
   ...habit_tables,
   ...habit_log_tables,
+  ...payment_method_tables,
+  ...expense_tables,
+  ...budget_tables,
 };
 
 const db = drizzle(pool, { schema });
