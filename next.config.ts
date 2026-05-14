@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   webpack: (config) => {
     // pg-native is an optional native binding — not needed in Next.js
     config.externals = [...(config.externals ?? []), { "pg-native": "pg-native" }];

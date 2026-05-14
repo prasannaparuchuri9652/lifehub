@@ -22,7 +22,8 @@
       "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\habits\\\\[id]\")",
       "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\habits\\\\[id]\\\\log\")",
       "Bash(mkdir \"C:\\\\Users\\\\yedda\\\\personal_projects\\\\todo_project\\\\src\\\\app\\\\api\\\\personal\\\\[id]\")",
-      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)"
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
