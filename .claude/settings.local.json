@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npx drizzle-kit *)",
+      "Bash(node -e ' *)",
+      "Bash(grep -v \"Warning\\\\|SSL modes\\\\|next major\\\\|To prepare\\\\|uselibpqcompat\\\\|postgresql.org\\\\|Use \\\\`node\")",
+      "Bash(npx auth *)",
+      "Bash(node *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(git config *)",
+      "Bash(findstr \"user\\\\|credential\\\\|remote\")",
+      "Bash(cmdkey /delete:git:https://github.com)",
+      "Bash(gh auth *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(git init *)"
+    ]
+  }
+}
