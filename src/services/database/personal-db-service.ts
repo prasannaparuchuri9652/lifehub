@@ -63,6 +63,15 @@ export async function createHabit(data: ValidatedHabit) {
   return habit;
 }
 
+export async function updateHabit(id: number, data: Partial<ValidatedHabit>) {
+  const [habit] = await db
+    .update(habits)
+    .set({ ...data, updated_at: new Date() })
+    .where(eq(habits.id, id))
+    .returning();
+  return habit;
+}
+
 export async function deleteHabit(id: number) {
   await db.update(habits).set({ deleted_at: new Date() }).where(eq(habits.id, id));
 }

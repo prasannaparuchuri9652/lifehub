@@ -27,6 +27,25 @@ export async function createProject(data: ValidatedProject) {
   return project;
 }
 
+export async function updateProject(id: number, data: Partial<ValidatedProject>) {
+  const [project] = await db
+    .update(projects)
+    .set({
+      ...(data.name && { name: data.name }),
+      ...(data.description !== undefined && { description: data.description }),
+      ...(data.status && { status: data.status }),
+      ...(data.deadline !== undefined && { deadline: data.deadline ? new Date(data.deadline) : null }),
+      updated_at: new Date(),
+    })
+    .where(eq(projects.id, id))
+    .returning();
+  return project;
+}
+
+export async function deleteProject(id: number) {
+  await db.update(projects).set({ deleted_at: new Date() }).where(eq(projects.id, id));
+}
+
 // ── Work Tasks ────────────────────────────────────────────
 
 export async function getWorkTasks(projectId?: number) {

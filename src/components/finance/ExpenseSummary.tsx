@@ -5,9 +5,10 @@ import type { Expense } from "@/store/financeStore";
 interface Props {
   expenses: Expense[];
   onDelete: (id: number) => void;
+  onView: (expense: Expense) => void;
 }
 
-export default function ExpenseSummary({ expenses, onDelete }: Props) {
+export default function ExpenseSummary({ expenses, onDelete, onView }: Props) {
   const total = expenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
   return (
@@ -30,9 +31,9 @@ export default function ExpenseSummary({ expenses, onDelete }: Props) {
               <span className="text-sm">{categoryEmoji(expense.category)}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-800 truncate">
+              <button onClick={() => onView(expense)} className="text-sm font-medium text-slate-800 truncate hover:underline text-left block">
                 {expense.description || expense.category}
-              </p>
+              </button>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs text-slate-400">
                   {new Date(expense.expense_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}

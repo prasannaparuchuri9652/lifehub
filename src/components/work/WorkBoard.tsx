@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useWorkStore } from "@/store/workStore";
+import type { Task } from "@/store/workStore";
 import TaskCard from "./TaskCard";
 import TaskForm from "./TaskForm";
+import TaskDetailModal from "./TaskDetailModal";
+import { useToastStore } from "@/store/toastStore";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 
 const COLUMNS = [
   { id: "todo", label: "Todo", accent: "border-t-slate-300" },
@@ -15,14 +19,39 @@ const COLUMNS = [
 export default function WorkBoard() {
   const { tasks, projects, loading, fetchTasks, fetchProjects, createTask, updateTask, deleteTask } =
     useWorkStore();
+  const toast = useToastStore((s) => s.show);
   const [addingTo, setAddingTo] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchTasks();
     fetchProjects();
   }, [fetchTasks, fetchProjects]);
 
+  async function handleDelete(id: number) {
+    await deleteTask(id);
+    toast("Task deleted", "error");
+    setConfirmDeleteId(null);
+  }
+
   return (
+    <>
+    <TaskDetailModal
+      task={selectedTask}
+      projects={projects}
+      open={!!selectedTask}
+      onClose={() => setSelectedTask(null)}
+      onUpdate={async (id, data) => { await updateTask(id, data); }}
+      onDelete={(id) => setConfirmDeleteId(id)}
+    />
+    <ConfirmDialog
+      open={confirmDeleteId !== null}
+      title="Delete task?"
+      message="This will permanently remove the task."
+      onConfirm={() => confirmDeleteId !== null && handleDelete(confirmDeleteId)}
+      onCancel={() => setConfirmDeleteId(null)}
+    />
     <div className="flex gap-4 h-full overflow-x-auto pb-4 px-1">
       {COLUMNS.map((col) => {
         const colTasks = tasks.filter((t) => t.status === col.id);
@@ -49,7 +78,8 @@ export default function WorkBoard() {
                     key={task.id}
                     task={task}
                     onStatusChange={(id, status) => updateTask(id, { status })}
-                    onDelete={deleteTask}
+                    onDelete={(id) => setConfirmDeleteId(id)}
+                    onView={setSelectedTask}
                   />
                 ))
               )}
@@ -77,5 +107,6 @@ export default function WorkBoard() {
         );
       })}
     </div>
+    </>
   );
 }

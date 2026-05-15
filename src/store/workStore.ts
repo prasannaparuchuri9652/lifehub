@@ -30,6 +30,8 @@ interface WorkStore {
   updateTask: (id: number, data: Partial<Task>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
   createProject: (data: { name: string; description?: string }) => Promise<void>;
+  updateProject: (id: number, data: Partial<Project>) => Promise<void>;
+  deleteProject: (id: number) => Promise<void>;
 }
 
 export const useWorkStore = create<WorkStore>((set, get) => ({
@@ -86,5 +88,22 @@ export const useWorkStore = create<WorkStore>((set, get) => ({
     });
     const project = await res.json();
     set((s) => ({ projects: [...s.projects, project] }));
+  },
+
+  updateProject: async (id, data) => {
+    const existing = get().projects.find((p) => p.id === id);
+    if (!existing) return;
+    const res = await fetch(`/api/projects/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...existing, ...data }),
+    });
+    const updated = await res.json();
+    set((s) => ({ projects: s.projects.map((p) => (p.id === id ? { ...p, ...updated } : p)) }));
+  },
+
+  deleteProject: async (id) => {
+    await fetch(`/api/projects/${id}`, { method: "DELETE" });
+    set((s) => ({ projects: s.projects.filter((p) => p.id !== id) }));
   },
 }));

@@ -49,6 +49,22 @@ export async function createExpense(data: ValidatedExpense) {
   return expense;
 }
 
+export async function updateExpense(id: number, data: Partial<ValidatedExpense>) {
+  const [expense] = await db
+    .update(expenses)
+    .set({
+      ...(data.amount !== undefined && { amount: data.amount }),
+      ...(data.category && { category: data.category }),
+      ...(data.description !== undefined && { description: data.description }),
+      ...(data.payment_method_id !== undefined && { payment_method_id: data.payment_method_id ? Number(data.payment_method_id) : null }),
+      ...(data.expense_date && { expense_date: data.expense_date }),
+      updated_at: new Date(),
+    })
+    .where(eq(expenses.id, id))
+    .returning();
+  return expense;
+}
+
 export async function deleteExpense(id: number) {
   await db.update(expenses).set({ deleted_at: new Date() }).where(eq(expenses.id, id));
 }
@@ -95,6 +111,15 @@ export async function getPaymentMethods() {
 
 export async function createPaymentMethod(data: ValidatedPaymentMethod) {
   const [method] = await db.insert(payment_methods).values(data).returning();
+  return method;
+}
+
+export async function updatePaymentMethod(id: number, data: Partial<ValidatedPaymentMethod>) {
+  const [method] = await db
+    .update(payment_methods)
+    .set({ ...data, updated_at: new Date() })
+    .where(eq(payment_methods.id, id))
+    .returning();
   return method;
 }
 

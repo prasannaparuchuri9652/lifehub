@@ -34,6 +34,7 @@ interface PersonalStore {
   updateTask: (id: number, data: Partial<PersonalTask>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
   createHabit: (data: { name: string; description?: string; frequency?: string; color?: string }) => Promise<void>;
+  updateHabit: (id: number, data: Partial<Habit>) => Promise<void>;
   logHabit: (habitId: number) => Promise<void>;
   deleteHabit: (id: number) => Promise<void>;
 }
@@ -91,6 +92,18 @@ export const usePersonalStore = create<PersonalStore>((set, get) => ({
     });
     const habit = await res.json();
     set((s) => ({ habits: [...s.habits, { ...habit, streak: 0, total: 0, todayDone: false }] }));
+  },
+
+  updateHabit: async (id, data) => {
+    const res = await fetch(`/api/habits/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const updated = await res.json();
+    set((s) => ({
+      habits: s.habits.map((h) => (h.id === id ? { ...h, ...updated } : h)),
+    }));
   },
 
   logHabit: async (habitId) => {

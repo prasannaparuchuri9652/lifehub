@@ -42,9 +42,11 @@ interface FinanceStore {
   setMonth: (month: string) => void;
   fetchAll: (month?: string) => Promise<void>;
   addExpense: (data: Partial<Expense>) => Promise<void>;
+  updateExpense: (id: number, data: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: number) => Promise<void>;
   upsertBudget: (data: { category: string; amount: string; month: string }) => Promise<void>;
   addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
+  updatePaymentMethod: (id: number, data: Partial<PaymentMethod>) => Promise<void>;
   deletePaymentMethod: (id: number) => Promise<void>;
 }
 
@@ -84,6 +86,17 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     await get().fetchAll();
   },
 
+  updateExpense: async (id, data) => {
+    const res = await fetch(`/api/finance/expenses/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const updated = await res.json();
+    set((s) => ({ expenses: s.expenses.map((e) => (e.id === id ? { ...e, ...updated } : e)) }));
+    await get().fetchAll();
+  },
+
   deleteExpense: async (id) => {
     await fetch(`/api/finance/expenses/${id}`, { method: "DELETE" });
     set((s) => ({ expenses: s.expenses.filter((e) => e.id !== id) }));
@@ -112,6 +125,16 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     });
     const method = await res.json();
     set((s) => ({ paymentMethods: [...s.paymentMethods, method] }));
+  },
+
+  updatePaymentMethod: async (id, data) => {
+    const res = await fetch(`/api/finance/payment-methods/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const updated = await res.json();
+    set((s) => ({ paymentMethods: s.paymentMethods.map((m) => (m.id === id ? { ...m, ...updated } : m)) }));
   },
 
   deletePaymentMethod: async (id) => {

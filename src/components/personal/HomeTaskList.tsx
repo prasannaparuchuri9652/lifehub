@@ -11,9 +11,10 @@ interface Props {
   onAdd: (data: Partial<PersonalTask>) => Promise<void>;
   onToggle: (id: number, status: string) => void;
   onDelete: (id: number) => void;
+  onView: (task: PersonalTask) => void;
 }
 
-export default function HomeTaskList({ tasks, onAdd, onToggle, onDelete }: Props) {
+export default function HomeTaskList({ tasks, onAdd, onToggle, onDelete, onView }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -95,7 +96,7 @@ export default function HomeTaskList({ tasks, onAdd, onToggle, onDelete }: Props
           <p className="text-sm text-slate-400 text-center py-8">No tasks — add one above</p>
         )}
         {todo.map((task) => (
-          <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
+          <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} onView={onView} />
         ))}
       </div>
 
@@ -107,7 +108,7 @@ export default function HomeTaskList({ tasks, onAdd, onToggle, onDelete }: Props
           </summary>
           <div className="divide-y divide-slate-50">
             {done.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
+              <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} onView={onView} />
             ))}
           </div>
         </details>
@@ -116,10 +117,11 @@ export default function HomeTaskList({ tasks, onAdd, onToggle, onDelete }: Props
   );
 }
 
-function TaskRow({ task, onToggle, onDelete }: {
+function TaskRow({ task, onToggle, onDelete, onView }: {
   task: PersonalTask;
   onToggle: (id: number, status: string) => void;
   onDelete: (id: number) => void;
+  onView: (task: PersonalTask) => void;
 }) {
   const isDone = task.status === "done";
   const dueDate = task.due_date
@@ -142,7 +144,7 @@ function TaskRow({ task, onToggle, onDelete }: {
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm ${isDone ? "line-through text-slate-400" : "text-slate-800"}`}>{task.title}</p>
+        <button onClick={() => onView(task)} className={`text-sm text-left hover:underline ${isDone ? "line-through text-slate-400" : "text-slate-800"}`}>{task.title}</button>
         <div className="flex items-center gap-2 mt-0.5">
           {task.category && (
             <span className="text-xs text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">{task.category}</span>

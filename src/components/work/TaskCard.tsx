@@ -17,9 +17,10 @@ interface TaskCardProps {
   task: Task;
   onStatusChange: (id: number, status: string) => void;
   onDelete: (id: number) => void;
+  onView: (task: Task) => void;
 }
 
-export default function TaskCard({ task, onStatusChange, onDelete }: TaskCardProps) {
+export default function TaskCard({ task, onStatusChange, onDelete, onView }: TaskCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const dueDate = task.due_date
@@ -47,9 +48,12 @@ export default function TaskCard({ task, onStatusChange, onDelete }: TaskCardPro
           )}
         </button>
 
-        <p className={`text-sm font-medium leading-snug flex-1 ${isDone ? "line-through text-slate-400" : "text-slate-900"}`}>
+        <button
+          onClick={() => onView(task)}
+          className={`text-sm font-medium leading-snug flex-1 text-left hover:underline ${isDone ? "line-through text-slate-400" : "text-slate-900"}`}
+        >
           {task.title}
-        </p>
+        </button>
 
         <div className="relative shrink-0">
           <button

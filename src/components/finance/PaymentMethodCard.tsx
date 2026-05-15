@@ -7,13 +7,14 @@ interface Props {
   methods: PaymentMethod[];
   onAdd: (data: Partial<PaymentMethod>) => Promise<void>;
   onDelete: (id: number) => void;
+  onEdit: (method: PaymentMethod) => void;
 }
 
 const TYPE_ICONS: Record<string, string> = {
   card: "💳", upi: "📱", cash: "💵", netbanking: "🏦",
 };
 
-export default function PaymentMethodCard({ methods, onAdd, onDelete }: Props) {
+export default function PaymentMethodCard({ methods, onAdd, onDelete, onEdit }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [type, setType] = useState("card");
   const [loading, setLoading] = useState(false);
@@ -92,14 +93,14 @@ export default function PaymentMethodCard({ methods, onAdd, onDelete }: Props) {
         {methods.map((m) => (
           <div key={m.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 group">
             <span className="text-xl">{TYPE_ICONS[m.type] ?? "💰"}</span>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-slate-800">
+            <button onClick={() => onEdit(m)} className="flex-1 text-left">
+              <p className="text-sm font-medium text-slate-800 hover:underline">
                 {m.label}
                 {m.last_four && <span className="text-slate-400 ml-1 font-normal">••••{m.last_four}</span>}
                 {m.is_default && <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">Default</span>}
               </p>
               {m.upi_id && <p className="text-xs text-slate-400 mt-0.5">{m.upi_id}</p>}
-            </div>
+            </button>
             <button
               onClick={() => onDelete(m.id)}
               className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-400 transition-all p-1 rounded"

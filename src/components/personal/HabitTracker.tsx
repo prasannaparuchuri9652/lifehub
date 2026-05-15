@@ -8,11 +8,12 @@ interface Props {
   onLog: (habitId: number) => Promise<void>;
   onAdd: (data: { name: string; frequency?: string; color?: string }) => Promise<void>;
   onDelete: (id: number) => void;
+  onView: (habit: Habit) => void;
 }
 
 const COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#ef4444"];
 
-export default function HabitTracker({ habits, onLog, onAdd, onDelete }: Props) {
+export default function HabitTracker({ habits, onLog, onAdd, onDelete, onView }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [logging, setLogging] = useState<number | null>(null);
@@ -100,6 +101,7 @@ export default function HabitTracker({ habits, onLog, onAdd, onDelete }: Props) 
             logging={logging === habit.id}
             onLog={() => handleLog(habit.id)}
             onDelete={() => onDelete(habit.id)}
+            onView={() => onView(habit)}
           />
         ))}
       </div>
@@ -107,11 +109,12 @@ export default function HabitTracker({ habits, onLog, onAdd, onDelete }: Props) 
   );
 }
 
-function HabitRow({ habit, logging, onLog, onDelete }: {
+function HabitRow({ habit, logging, onLog, onDelete, onView }: {
   habit: Habit;
   logging: boolean;
   onLog: () => void;
   onDelete: () => void;
+  onView: () => void;
 }) {
   return (
     <div className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 group">
@@ -120,7 +123,7 @@ function HabitRow({ habit, logging, onLog, onDelete }: {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-slate-800">{habit.name}</p>
+        <button onClick={onView} className="text-sm font-medium text-slate-800 hover:underline text-left">{habit.name}</button>
         <div className="flex items-center gap-3 mt-0.5">
           <span className="text-xs text-slate-400 capitalize">{habit.frequency}</span>
           <span className="text-xs text-slate-500">
